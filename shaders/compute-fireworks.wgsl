@@ -7,21 +7,18 @@ struct Particle {
   _pad: f32
 }
 
-struct SimParams {
+struct Params {
   delta_t: f32,
-  rule1_distance: f32,
-  rule2_distance: f32,
-  rule3_distance: f32,
-  rule1_scale: f32,
-  rule2_scale: f32,
-  rule3_scale: f32,
+  length: f32,
+  width: f32,
+  opacity: f32,
 }
 
 struct Particles {
   particles: array<Particle>,
 }
 
-@binding(0) @group(0) var<uniform> params: SimParams;
+@binding(0) @group(0) var<uniform> params: Params;
 @binding(1) @group(0) var<storage, read> particles_a: Particles;
 @binding(2) @group(0) var<storage, read_write> particles_b: Particles;
 
@@ -38,7 +35,7 @@ fn compute_move(p: vec3f, vol: vec3f, dt: f32) -> ComputeResult {
   let path = vol * dt;
   // let path = vec3(0., 0.01, 0.);;
   var next = p + path * 1.1;
-  let vol_next = vol + vec3(0., -40.1, 0.) * dt;
+  let vol_next = vol + vec3(0., -80.1, 0.) * dt;
   // next = clamp(next, vec3(-10000., -10000., -10000.0), vec3(10000., 10000., 10000.));
   return ComputeResult(
     next,
@@ -60,8 +57,8 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID: vec3<u32>) {
   let vol = particles_a.particles[index].velocity;
   // let vol = vec3(0.0, 20.1, 0.0);
 
-  let level_1 = 400u;
-  let level_2 = 40u;
+  let level_1 = 32u;
+  let level_2 = 100u;
   if (index % level_1 != 0u) {
     // inherit from previous poit
     let prev = index - 1u;
@@ -75,7 +72,7 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID: vec3<u32>) {
 
   let small_index = index / level_1;
 
-  let age_limit = 3.0;
+  let age_limit = 2.8;
 
   if (small_index % level_2 != 0u) {
     // pick a common base point or (small_index / level_2)
@@ -87,7 +84,7 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID: vec3<u32>) {
       particles_b.particles[index].pos = common_particle.pos;
       particles_b.particles[index].prev_pos = common_particle.prev_pos;
       if (common_particle.ages + 0.01 >= age_limit) {
-        particles_b.particles[index].velocity = particles_a.particles[index].velocity * 0.4;
+        particles_b.particles[index].velocity = common_particle.velocity * 0.08 + particles_a.particles[index].velocity * 0.4;
       }
       return;
     } else {
@@ -96,7 +93,7 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID: vec3<u32>) {
       particles_b.particles[index].pos = ret.position;
       particles_b.particles[index].velocity = ret.velocity;
       particles_b.particles[index].prev_pos = v_pos;
-      particles_b.particles[index].ages += 0.01;
+      particles_b.particles[index].ages += 0.05;
       particles_b.particles[index].distance += ret.distance;
       return;
 

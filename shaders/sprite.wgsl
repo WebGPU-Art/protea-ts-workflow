@@ -16,9 +16,6 @@ struct SimParams {
   length: f32,
   width: f32,
   opacity: f32,
-  rule1_scale: f32,
-  rule2_scale: f32,
-  rule3_scale: f32,
 }
 
 @group(0) @binding(0) var<uniform> uniforms: UBO;
@@ -84,9 +81,9 @@ fn vert_main(
   let right = normalize(cross(v0, uniforms.forward));
 
   // let front = params.length;
-  var width = params.width * 1.4;
+  var width = params.width * 0.8;
 
-  if (ages < 0.01) {
+  if (ages < 0.04) {
     // prev_position = position;
     width = 0.0;
   }
@@ -116,7 +113,7 @@ fn vert_main(
 
   output.position = vec4(p[0]*scale, p[1]*scale, p[2]*scale, 1.0);
   let c3: vec3<f32> = hsl(fract(travel/1000.), 0.8, max(0.1, 0.9 - ages * 0.2));
-  output.color = vec4(c3, params.opacity);
+  output.color = vec4(c3, max(0.1, 1 - ages * 0.3));
   return output;
 }
 
