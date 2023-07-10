@@ -112,10 +112,10 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.17.18.tgz#3a8e57153905308db357fd02f57c180ee3a0a1fa"
   integrity sha512-qU25Ma1I3NqTSHJUOKi9sAH1/Mzuvlke0ioMJRthLXKm7JiSKVwFghlGbDLOO2sARECGhja4xYfRAZNPAkooYg==
 
-"@triadica/protea@^0.0.1-a1":
-  version "0.0.1-a1"
-  resolved "https://registry.yarnpkg.com/@triadica/protea/-/protea-0.0.1-a1.tgz#0ffe64380b6d57494de679b2f1c6762948b5173d"
-  integrity sha512-dp7/Awh/8NLZuCJ851WlOmxvLOefbxt+/tvUFszWjwMlORz2jQX8egluzwMLyDqxLUtYti+OP+Um1vEaBX6gGQ==
+"@triadica/protea@^0.0.1-a2":
+  version "0.0.1-a2"
+  resolved "https://registry.yarnpkg.com/@triadica/protea/-/protea-0.0.1-a2.tgz#3b8e6914892fa0c280a8034dd8b6bdca2de8f095"
+  integrity sha512-HpZJCQPDankMIXJsUHRwEHFjAI/pegXAVhvrcrbgNg7t5U9zNapdph0L6th6saLxdCQXyC5k6ycRy7XGpUvdcA==
   dependencies:
     "@triadica/touch-control" "^0.0.3"
     ismobilejs "^1.1.1"
