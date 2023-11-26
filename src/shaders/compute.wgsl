@@ -3,7 +3,6 @@ struct Particle {
   idx: f32,
   velocity: vec3<f32>,
   _distance: f32,
-  _prev_pos: vec4<f32>,
 }
 
 struct Params {

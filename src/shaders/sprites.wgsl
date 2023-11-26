@@ -22,7 +22,7 @@ fn vert_main(
   @location(1) point_idx: f32,
   @location(2) velocity: vec3<f32>,
   @location(3) _travel: f32,
-  @location(5) idx: u32,
+  @location(4) idx: u32,
 ) -> VertexOutput {
   let right = normalize(uniforms.rightward);
   let up = normalize(uniforms.upward);

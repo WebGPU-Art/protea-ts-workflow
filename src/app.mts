@@ -34,13 +34,13 @@ export let loadRenderer = async (canvas: HTMLCanvasElement) => {
 };
 
 function makeSeed(numParticles: number, _s: number): Float32Array {
-  const buf = new Float32Array(numParticles * 12);
+  const buf = new Float32Array(numParticles * 8);
   let scale_base = 50;
   for (let i = 0; i < numParticles; ++i) {
     let scale = scale_base + 0.0 * i;
     let p = fiboGridN(i, numParticles);
     // let q = randPointInSphere(100);
-    let b = 12 * i;
+    let b = 8 * i;
     buf[b + 0] = 0;
     buf[b + 1] = -60;
     buf[b + 2] = 0;
@@ -57,7 +57,7 @@ function makeSeed(numParticles: number, _s: number): Float32Array {
 let vertexBufferLayout: GPUVertexBufferLayout[] = [
   {
     // instanced particles buffer
-    arrayStride: 12 * 4,
+    arrayStride: 8 * 4,
     stepMode: "instance",
     attributes: [
       { shaderLocation: 0, offset: 0, format: "float32x3" },
@@ -70,6 +70,6 @@ let vertexBufferLayout: GPUVertexBufferLayout[] = [
     // vertex buffer
     arrayStride: 1 * 4,
     stepMode: "vertex",
-    attributes: [{ shaderLocation: 5, offset: 0, format: "uint32" }],
+    attributes: [{ shaderLocation: 4, offset: 0, format: "uint32" }],
   },
 ];
