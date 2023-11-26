@@ -1,26 +1,30 @@
-import { createRenderer, resetCanvasSize } from "@triadica/protea";
-import spriteWGSL from "../shaders/sprite.wgsl?raw";
-import computeFireworks from "../shaders/compute-fireworks.wgsl?raw";
-
-import { randPointInSphere } from "@triadica/protea";
+import { createRenderer } from "@triadica/protea";
+import spritesShader from "./shaders/sprites.wgsl?raw";
+import computeShader from "./shaders/compute.wgsl?raw";
+import { fiboGridN } from "@triadica/protea/lib/math.mjs";
 
 export let loadRenderer = async (canvas: HTMLCanvasElement) => {
-  let seedSize = 1600000;
+  let seedSize = 800000;
 
   let renderFrame = await createRenderer(
     canvas,
     {
       seedSize,
       seedData: makeSeed(seedSize, 0),
-      params: loadParams(),
-      computeShader: computeFireworks,
+      params: [
+        0.004, // deltaT
+        0.6, // height
+        0.2, // width
+        0.8, // opacity
+      ],
+      computeShader: computeShader,
     },
     {
       vertexCount: 1,
-      vertexData: loadVertex(),
+      vertexData: [0, 1, 2, 3],
       indexData: [0, 1, 2, 1, 2, 3],
       vertexBufferLayout: vertexBufferLayout,
-      renderShader: spriteWGSL,
+      renderShader: spritesShader,
       // topology: "line-list",
       bgColor: [0.1, 0.0, 0.2, 1.0],
     }
@@ -29,53 +33,25 @@ export let loadRenderer = async (canvas: HTMLCanvasElement) => {
   return renderFrame;
 };
 
-function rand_middle(n: number) {
-  return n * (Math.random() - 0.5);
-}
-
-function makeSeed(numParticles: number, scale: number): Float32Array {
+function makeSeed(numParticles: number, _s: number): Float32Array {
   const buf = new Float32Array(numParticles * 12);
-  let offset = 0.5;
-  let base = 0;
+  let scale_base = 50;
   for (let i = 0; i < numParticles; ++i) {
-    let p = randPointInSphere(scale);
-    let q = randPointInSphere(100);
+    let scale = scale_base + 0.0 * i;
+    let p = fiboGridN(i, numParticles);
+    // let q = randPointInSphere(100);
     let b = 12 * i;
-    buf[b + 0] = p.x;
-    buf[b + 1] = p.y;
-    buf[b + 2] = p.z;
-    buf[b + 3] = Math.random() * 0.8; // ages
-    buf[b + 4] = 10;
-    buf[b + 5] = 10;
-    buf[b + 6] = 10;
-    buf[b + 7] = rand_middle(50000); // distance
-    buf[b + 8] = q.x; // velocity
-    buf[b + 9] = 40 + q.y;
-    buf[b + 10] = q.z;
-    buf[b + 11] = 0;
+    buf[b + 0] = 0;
+    buf[b + 1] = -60;
+    buf[b + 2] = 0;
+    buf[b + 3] = i; // index
+    buf[b + 4] = p[0] * scale;
+    buf[b + 5] = p[1] * scale;
+    buf[b + 6] = p[2] * scale;
+    buf[b + 7] = 0;
   }
 
   return buf;
-}
-
-function loadParams(): number[] {
-  return [
-    0.004, // deltaT
-    0.6, // height
-    0.2, // width
-    0.8, // opacity
-  ];
-}
-
-function loadVertex(): number[] {
-  // prettier-ignore
-  return [
-    0, 1, 2, 3
-    // -0.06, -0.06, -0.03,
-    // 0.06, -0.06, -0.03,
-    // 0.0, 0.06, 0,
-    // 0.0, -0.06, 0.03,
-  ];
 }
 
 let vertexBufferLayout: GPUVertexBufferLayout[] = [
@@ -88,14 +64,12 @@ let vertexBufferLayout: GPUVertexBufferLayout[] = [
       { shaderLocation: 1, offset: 3 * 4, format: "float32" },
       { shaderLocation: 2, offset: 4 * 4, format: "float32x3" },
       { shaderLocation: 3, offset: 7 * 4, format: "float32" },
-      { shaderLocation: 4, offset: 8 * 4, format: "float32x3" },
-      { shaderLocation: 5, offset: 11 * 4, format: "float32" },
     ],
   },
   {
     // vertex buffer
     arrayStride: 1 * 4,
     stepMode: "vertex",
-    attributes: [{ shaderLocation: 6, offset: 0, format: "uint32" }],
+    attributes: [{ shaderLocation: 5, offset: 0, format: "uint32" }],
   },
 ];
