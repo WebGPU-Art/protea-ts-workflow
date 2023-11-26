@@ -1,12 +1,12 @@
 {
   "devDependencies": {
-    "@webgpu/types": "^0.1.31",
+    "@webgpu/types": "^0.1.40",
     "query-string": "^8.1.0",
-    "typescript": "^5.0.4",
-    "vite": "^4.3.3"
+    "typescript": "^5.3.2",
+    "vite": "^5.0.2"
   },
   "dependencies": {
-    "@triadica/protea": "^0.0.1-a2"
+    "@triadica/protea": "^0.0.2-a1"
   },
   "name": "@triadica/protea",
   "description": "> Compute boids with Triadica controls in WebGPU",
